@@ -16,10 +16,10 @@
 ```
 $ python bars.py 
 ```
-```
+
 # пример ответа скрипта вывод всех данных найденного бара.
 
-
+```
 {'geometry': {'coordinates': [37.638228501070095, 55.70111462948684], 'type': 'Point'},
 'properties': {'DatasetId': 1796, 'VersionNumber': 2, 'ReleaseNumber': 2,
 'RowId': 'fbe6c340-4707-4d74-b7ca-2b84a23bf3a8', 'Attributes': {'global_id': 169375059,
