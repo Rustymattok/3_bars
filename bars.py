@@ -1,54 +1,50 @@
 import json
 
 
-# 'Parameter for coordinate system.  '
-
-
-POS_X = 37.2
-POS_Y = 55.2
-
-
-# 'This method load json and convert it to dictionary format.  '
-
-
 def load_data(filepath):
-    file_json = open(filepath)
-    bars_list = json.load(file_json)
-    return bars_list
+    with open(filepath) as f:
+        json_string = f.read()
+        json_list = json.loads(json_string)
+    return json_list
 
 
-# 'This method return the biggest bar(sort by number of seats).  "
+def get_biggest_bar(json_list):
+    biggest_bar = max(
+        json_list["features"],
+        key=lambda k: k["properties"]["Attributes"]["SeatsCount"])
+    return biggest_bar  # max value SeatsCount in json list.
 
 
-def get_biggest_bar(bars_list):
-    biggest_bar = max(bars_list["features"],
-                      key=lambda k:
-                      k["properties"]["Attributes"]["SeatsCount"])
-    return biggest_bar
+def get_smallest_bar(json_list):
+    smallest_bar = min(
+        json_list["features"],
+        key=lambda k: k["properties"]["Attributes"]["SeatsCount"])
+    return smallest_bar  # min value SeatsCount in json list.
 
 
-# 'This method return the smallest bar(sort by number of seats).  "
+def get_closest_bar(json_list, longitude, latitude):
+    closest_bar = min(
+        json_list["features"], key=lambda k:
+        (k["geometry"]['coordinates'][0] - longitude) ** 2 +
+        (k["geometry"]['coordinates'][1] - latitude) ** 2)
+    return closest_bar  # closest bar by value of coordinates.
 
 
-def get_smallest_bar(bars_list):
-    smallest_bar = min(bars_list["features"],
-                       key=lambda k:
-                       k["properties"]["Attributes"]["SeatsCount"])
-    return smallest_bar
-
-
-# 'This method return the closest bar.  "
-
-
-def get_closest_bar(bars_list, longitude, latitude):
-    closest_bar = min(bars_list["features"],
-                      key=lambda k:
-                      (k["geometry"]['coordinates'][0] - longitude) ** 2 +
-                      (k["geometry"]['coordinates'][1] - latitude) ** 2)
-    return closest_bar
+def main():
+    filepath = input('enter file way: ')
+    if filepath[-5:len(filepath)] != '.json':  # for format .json
+        print('not correct format')
+        return
+    pos_x = input('enter your position X: ')
+    pos_y = input('enter your position y: ')
+    try:
+        json_list = load_data(filepath)
+        print(get_biggest_bar(json_list))
+        print(get_smallest_bar(json_list))
+        print(get_closest_bar(json_list, float(pos_x), float(pos_y)))
+    except FileNotFoundError:
+        print("not found file")
 
 
 if __name__ == '__main__':
-    print(get_biggest_bar(load_data('./bars.json')))
-    print(get_smallest_bar(load_data('./bars.json')))
-    print(get_closest_bar(load_data('./bars.json'), POS_X, POS_Y))
+    main()
