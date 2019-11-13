@@ -1,50 +1,65 @@
 import json
+import os
+import argparse
 
 
-def load_data(filepath):
-    with open(filepath) as f:
-        json_string = f.read()
-        json_list = json.loads(json_string)
-    return json_list
+def load_data(file_path):
+    if not os.path.exists(file_path):
+        return None
+    with open(file_path, 'r') as file_handler:
+        data_string = file_handler.read()
+        decoded_data = json.loads(data_string)
+    return decoded_data
 
 
-def get_biggest_bar(json_list):
+def get_biggest_bar(decoded_data):
     biggest_bar = max(
-        json_list["features"],
+        decoded_data["features"],
         key=lambda k: k["properties"]["Attributes"]["SeatsCount"])
-    return biggest_bar  # max value SeatsCount in json list.
+    encoded_biggest_bar = json.dumps(biggest_bar,
+                                     ensure_ascii=False, indent=4)
+    return encoded_biggest_bar
 
 
-def get_smallest_bar(json_list):
+def get_smallest_bar(decoded_data):
     smallest_bar = min(
-        json_list["features"],
+        decoded_data["features"],
         key=lambda k: k["properties"]["Attributes"]["SeatsCount"])
-    return smallest_bar  # min value SeatsCount in json list.
+    encoded_smallest_bar = json.dumps(smallest_bar,
+                                      ensure_ascii=False, indent=4)
+    return encoded_smallest_bar
 
 
-def get_closest_bar(json_list, longitude, latitude):
+def get_closest_bar(decoded_data, longitude, latitude):
     closest_bar = min(
-        json_list["features"], key=lambda k:
+        decoded_data["features"], key=lambda k:
         (k["geometry"]['coordinates'][0] - longitude) ** 2 +
         (k["geometry"]['coordinates'][1] - latitude) ** 2)
-    return closest_bar  # closest bar by value of coordinates.
+    encoded_closest_bar = json.dumps(closest_bar,
+                                     ensure_ascii=False, indent=4)
+    return encoded_closest_bar
 
 
-def main():
-    filepath = input('enter file way: ')
-    if filepath[-5:len(filepath)] != '.json':  # for format .json
-        print('not correct format')
-        return
-    pos_x = input('enter your position X: ')
-    pos_y = input('enter your position y: ')
-    try:
-        json_list = load_data(filepath)
-        print(get_biggest_bar(json_list))
-        print(get_smallest_bar(json_list))
-        print(get_closest_bar(json_list, float(pos_x), float(pos_y)))
-    except FileNotFoundError:
-        print("not found file")
+def create_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-f', '--file',
+                        required=True,
+                        help="command - input file")
+    parser.add_argument('x', type=float, help="coordinate X")
+    parser.add_argument('y', type=float, help="coordinate Y")
+    return parser
 
 
 if __name__ == '__main__':
-    main()
+    parser = create_parser()
+    args = parser.parse_args()
+    try:
+        file_name = load_data(args.file)
+        print("the biggest bar: " + '\n'
+              + get_biggest_bar(file_name))
+        print("the smallest bar: " + '\n'
+              + get_smallest_bar(file_name))
+        print("the closest bar: " + '\n'
+              + get_closest_bar(file_name, args.x, args.y))
+    except ValueError:
+        print("not correct format")
