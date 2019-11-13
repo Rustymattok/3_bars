@@ -1,5 +1,3 @@
-# -*- encoding: utf-8 -*-
-from __future__ import print_function
 import json
 import os
 import argparse
@@ -65,9 +63,9 @@ def main():
         biggest_bar = get_biggest_bar(bars)
         smallest_bar = get_smallest_bar(bars)
         closest_bar = get_closest_bar(bars, args.x, args.y)
-        print(u"самый большой бар: " + get_name_bar(biggest_bar))
-        print(u"самый маленькйи бар: " + get_name_bar(smallest_bar))
-        print(u"самый ближний бар: " + get_name_bar(closest_bar))
+        print("самый большой бар: " + get_name_bar(biggest_bar))
+        print("самый маленькйи бар: " + get_name_bar(smallest_bar))
+        print("самый ближний бар: " + get_name_bar(closest_bar))
     except ValueError:
         print("not correct format")
 
