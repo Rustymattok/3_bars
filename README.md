@@ -18,7 +18,6 @@ $ python bars.py -f<path to file> X Y
 # пример ответа скрипта вывод всех данных найденного бара.
 
 ```bash
-the biggest bar: 
 {
     "geometry": {
         "type": "Point", 
@@ -51,7 +50,6 @@ the biggest bar:
         "DatasetId": 1796
     }
 }
-the smallest bar: 
 {
     "geometry": {
         "type": "Point", 
@@ -84,7 +82,6 @@ the smallest bar:
         "DatasetId": 1796
     }
 }
-the closest bar: 
 {
     "geometry": {
         "type": "Point", 
