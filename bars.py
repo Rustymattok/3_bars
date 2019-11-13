@@ -1,3 +1,5 @@
+# -*- encoding: utf-8 -*-
+from __future__ import print_function
 import json
 import os
 import argparse
@@ -12,32 +14,36 @@ def load_data(file_path):
     return decoded_data
 
 
-def get_biggest_bar(decoded_data):
-    biggest_bar = max(
-        decoded_data["features"],
-        key=lambda k: k["properties"]["Attributes"]["SeatsCount"])
-    encoded_biggest_bar = json.dumps(biggest_bar,
-                                     ensure_ascii=False, indent=4)
-    return encoded_biggest_bar
+def get_bars(decoded_data):
+    bars = decoded_data["features"]
+    return bars
 
 
-def get_smallest_bar(decoded_data):
-    smallest_bar = min(
-        decoded_data["features"],
-        key=lambda k: k["properties"]["Attributes"]["SeatsCount"])
-    encoded_smallest_bar = json.dumps(smallest_bar,
-                                      ensure_ascii=False, indent=4)
-    return encoded_smallest_bar
+def get_biggest_bar(bars):
+    biggest_bar = max(bars,
+                      key=lambda k:
+                      k["properties"]["Attributes"]["SeatsCount"])
+    return biggest_bar
 
 
-def get_closest_bar(decoded_data, longitude, latitude):
+def get_smallest_bar(bars):
+    smallest_bar = min(bars,
+                       key=lambda k:
+                       k["properties"]["Attributes"]["SeatsCount"])
+    return smallest_bar
+
+
+def get_closest_bar(bars, longitude, latitude):
     closest_bar = min(
-        decoded_data["features"], key=lambda k:
+        bars, key=lambda k:
         (k["geometry"]['coordinates'][0] - longitude) ** 2 +
         (k["geometry"]['coordinates'][1] - latitude) ** 2)
-    encoded_closest_bar = json.dumps(closest_bar,
-                                     ensure_ascii=False, indent=4)
-    return encoded_closest_bar
+    return closest_bar
+
+
+def get_name_bar(bar):
+    name_bar = bar["properties"]["Attributes"]["Name"]
+    return name_bar
 
 
 def create_parser():
@@ -50,13 +56,21 @@ def create_parser():
     return parser
 
 
-if __name__ == '__main__':
+def main():
     parser = create_parser()
     args = parser.parse_args()
     try:
-        file_name = load_data(args.file)
-        print(get_biggest_bar(file_name))
-        print(get_smallest_bar(file_name))
-        print(get_closest_bar(file_name, args.x, args.y))
+        file_data = load_data(args.file)
+        bars = get_bars(file_data)
+        biggest_bar = get_biggest_bar(bars)
+        smallest_bar = get_smallest_bar(bars)
+        closest_bar = get_closest_bar(bars, args.x, args.y)
+        print(u"самый большой бар: " + get_name_bar(biggest_bar))
+        print(u"самый маленькйи бар: " + get_name_bar(smallest_bar))
+        print(u"самый ближний бар: " + get_name_bar(closest_bar))
     except ValueError:
         print("not correct format")
+
+
+if __name__ == '__main__':
+    main()
