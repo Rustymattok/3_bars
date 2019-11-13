@@ -55,11 +55,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     try:
         file_name = load_data(args.file)
-        print("the biggest bar: " + '\n'
-              + get_biggest_bar(file_name))
-        print("the smallest bar: " + '\n'
-              + get_smallest_bar(file_name))
-        print("the closest bar: " + '\n'
-              + get_closest_bar(file_name, args.x, args.y))
+        print(get_biggest_bar(file_name))
+        print(get_smallest_bar(file_name))
+        print(get_closest_bar(file_name, args.x, args.y))
     except ValueError:
         print("not correct format")
