@@ -13,34 +13,40 @@ def load_data(file_path):
 
 
 def get_bars(decoded_data):
-    bars = decoded_data["features"]
+    bars = decoded_data['features']
     return bars
 
 
 def get_biggest_bar(bars):
-    biggest_bar = max(bars,
-                      key=lambda k:
-                      k["properties"]["Attributes"]["SeatsCount"])
+    biggest_bar = max(
+        bars,
+        key=lambda k:
+        k['properties']['Attributes']['SeatsCount']
+    )
     return biggest_bar
 
 
 def get_smallest_bar(bars):
-    smallest_bar = min(bars,
-                       key=lambda k:
-                       k["properties"]["Attributes"]["SeatsCount"])
+    smallest_bar = min(
+        bars,
+        key=lambda k:
+        k['properties']['Attributes']['SeatsCount']
+    )
     return smallest_bar
 
 
 def get_closest_bar(bars, longitude, latitude):
     closest_bar = min(
-        bars, key=lambda k:
-        (k["geometry"]['coordinates'][0] - longitude) ** 2 +
-        (k["geometry"]['coordinates'][1] - latitude) ** 2)
+        bars,
+        key=lambda k:
+        (k['geometry']['coordinates'][0] - longitude) ** 2 +
+        (k['geometry']['coordinates'][1] - latitude) ** 2
+    )
     return closest_bar
 
 
 def get_name_bar(bar):
-    name_bar = bar["properties"]["Attributes"]["Name"]
+    name_bar = bar['properties']['Attributes']['Name']
     return name_bar
 
 
@@ -54,18 +60,19 @@ def create_parser():
     return parser
 
 
+def print_bar(description, bar):
+    print(description, get_name_bar(bar))
+
+
 def main():
     parser = create_parser()
     args = parser.parse_args()
     try:
         file_data = load_data(args.file)
         bars = get_bars(file_data)
-        biggest_bar = get_biggest_bar(bars)
-        smallest_bar = get_smallest_bar(bars)
-        closest_bar = get_closest_bar(bars, args.x, args.y)
-        print("самый большой бар: " + get_name_bar(biggest_bar))
-        print("самый маленькйи бар: " + get_name_bar(smallest_bar))
-        print("самый ближний бар: " + get_name_bar(closest_bar))
+        print_bar('самый большой бар: ', get_biggest_bar(bars))
+        print_bar('самый маленькйи бар: ', get_smallest_bar(bars))
+        print_bar('самый ближний бар: ', get_closest_bar(bars, args.x, args.y))
     except ValueError:
         print("not correct format")
 
