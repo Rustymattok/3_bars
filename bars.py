@@ -52,11 +52,14 @@ def get_name_bar(bar):
 
 def create_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-f', '--file',
-                        required=True,
-                        help="command - input file")
-    parser.add_argument('x', type=float, help="coordinate X")
-    parser.add_argument('y', type=float, help="coordinate Y")
+    parser.add_argument(
+        '-f',
+        '--file',
+        required=True,
+        help='command - input file'
+    )
+    parser.add_argument('x', type=float, help='coordinate X')
+    parser.add_argument('y', type=float, help='coordinate Y')
     return parser
 
 
@@ -74,7 +77,7 @@ def main():
         print_bar('самый маленькйи бар: ', get_smallest_bar(bars))
         print_bar('самый ближний бар: ', get_closest_bar(bars, args.x, args.y))
     except ValueError:
-        print("not correct format")
+        print('not correct format')
 
 
 if __name__ == '__main__':
